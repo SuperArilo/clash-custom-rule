@@ -3,3 +3,5 @@ payload:
   - DOMAIN-KEYWORD,csln
   - DOMAIN-SUFFIX,myip.ipip.net
   - DST-PORT,49363
+  - DOMAIN-KEYWORD,mojang
+  - DOMAIN-KEYWORD,minecraft
