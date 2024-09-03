@@ -6,3 +6,4 @@ payload:
   - SRC-PORT,49363
   - DOMAIN-KEYWORD,mojang
   - DOMAIN-KEYWORD,minecraft
+  - DOMAIN-KEYWORD,todesk
