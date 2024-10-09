@@ -1,1 +1,4 @@
-DOMAIN-SUFFIX,nexon.com
+payload:
+  - DOMAIN-KEYWORD,nexon
+  - DOMAIN-SUFFIX,nexon.com
+  
