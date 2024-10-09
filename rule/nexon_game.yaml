@@ -1,6 +1,7 @@
 payload:
   - DOMAIN-SUFFIX,stamp.mp.nexon.com
   - DOMAIN-SUFFIX,m.nexon.com
+  - DOMAIN-SUFFIX,nexon.com
   - DOMAIN-SUFFIX,ba.dn.nexoncdn.co.kr
   - DOMAIN-SUFFIX,nxm-eu-bagl.nexon.com
   - DOMAIN-SUFFIX,api.ngsm.nexon.com
