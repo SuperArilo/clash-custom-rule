@@ -1,4 +1,5 @@
 payload:
+  - DOMAIN-KEYWORD,nexon
   - DOMAIN-SUFFIX,stamp.mp.nexon.com
   - DOMAIN-SUFFIX,m.nexon.com
   - DOMAIN-SUFFIX,nexon.com
