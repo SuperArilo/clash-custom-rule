@@ -9,3 +9,4 @@ payload:
   - DOMAIN-SUFFIX,sdk-push.mp.nexon.com
   - DOMAIN-SUFFIX,m-api.nexon.com
   - DOMAIN-SUFFIX,jp.livelog.nexon.com
+  - DOMAIN-SUFFIX,nexon.io
