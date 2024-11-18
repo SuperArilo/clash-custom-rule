@@ -1,5 +1,0 @@
-payload:
-  - DOMAIN-SUFFIX,kurogame.xyz
-  - DOMAIN-SUFFIX,kurogame-service.com
-  - DOMAIN-SUFFIX,kurogame.net
-  - IP-CIDR,43.153.128.0/21,no-resolve
