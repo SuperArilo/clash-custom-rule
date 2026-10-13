@@ -62,8 +62,8 @@ dns:
   fake-ip-filter: ['*.lan', '*.local', 'localhost']
   prefer-h3: false
   respect-rules: false
-  default-nameserver: [223.5.5.5, 119.29.29.29]
-  proxy-server-nameserver: [223.5.5.5, 119.29.29.29]
+  default-nameserver: [8.8.8.8]
+  proxy-server-nameserver: [8.8.8.8]
   nameserver:
     - 'https://8.8.8.8/dns-query#🖕 DNS'
   fallback: []
