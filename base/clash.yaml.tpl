@@ -65,7 +65,7 @@ dns:
   default-nameserver: [223.5.5.5, 119.29.29.29]
   proxy-server-nameserver: [223.5.5.5, 119.29.29.29]
   nameserver:
-    - 'https://1.1.1.1/dns-query#{{ replace(routing.default_group, "'", "''") }}'
+    - 'https://8.8.8.8/dns-query#🖕 DNS'
   fallback: []
   nameserver-policy:
 {% for line in input.lines %}
@@ -75,7 +75,7 @@ dns:
 {% if startsWith(input.source, "clash-classic:") %}
     'rule-set:{{ at(names, loop.index) }}':
 {% if input.group == routing.direct_group or input.group == "DIRECT" %}
-      - 'https://dns.alidns.com/dns-query#{{ replace(input.group, "'", "''") }}'
+      - 'https://8.8.8.8/dns-query#🖕 DNS'
 {% else %}
       - 'https://1.1.1.1/dns-query#{{ replace(input.group, "'", "''") }}'
 {% endif %}
