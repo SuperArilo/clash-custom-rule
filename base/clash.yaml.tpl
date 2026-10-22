@@ -65,7 +65,7 @@ dns:
   default-nameserver: [8.8.8.8]
   proxy-server-nameserver: [8.8.8.8]
   nameserver:
-    - 'https://8.8.8.8/dns-query#🖕 DNS'
+    - 'https://1.1.1.1/dns-query#{{ replace(routing.default_group, "'", "''") }}'
   fallback: []
   nameserver-policy:
 {% for line in input.lines %}
@@ -74,11 +74,7 @@ dns:
 {{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
 {% if startsWith(input.source, "clash-classic:") %}
     'rule-set:{{ at(names, loop.index) }}':
-{% if input.group == routing.direct_group or input.group == "DIRECT" %}
-      - 'https://8.8.8.8/dns-query#🖕 DNS'
-{% else %}
       - 'https://1.1.1.1/dns-query#{{ replace(input.group, "'", "''") }}'
-{% endif %}
 {% endif %}
 {% endif %}
 {% endfor %}
@@ -101,6 +97,7 @@ dns:
 rule-providers:
 {% for line in input.lines %}
 {% if startsWith(trim(line), "ruleset=") %}
+{{ set("input.group", replace(trim(line), "^ruleset=([^,]+),.*$", "$1")) }}
 {{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
 {% if startsWith(input.source, "clash-") %}
   '{{ at(names, loop.index) }}':
@@ -114,7 +111,7 @@ rule-providers:
     url: '{{ replace(replace(input.source, "^clash-(classic|ipcidr):", ""), "'", "''") }}'
     # Omit path: Mihomo keys the cache by URL, so inserting a rule cannot reuse another service's cache.
     interval: 86400
-    proxy: '{{ replace(routing.default_group, "'", "''") }}'
+    proxy: '{{ replace(input.group, "'", "''") }}'
 {% endif %}
 {% endif %}
 {% endfor %}
