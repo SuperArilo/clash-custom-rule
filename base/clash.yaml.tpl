@@ -74,7 +74,12 @@ dns:
 {{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
 {% if startsWith(input.source, "clash-classic:") %}
     'rule-set:{{ at(names, loop.index) }}':
+{% if input.group == routing.direct_group or input.group == "DIRECT" %}
+      - 'https://dns.alidns.com/dns-query'
+      - 'https://doh.pub/dns-query'
+{% else %}
       - 'https://1.1.1.1/dns-query#{{ replace(input.group, "'", "''") }}'
+{% endif %}
 {% endif %}
 {% endif %}
 {% endfor %}
@@ -111,7 +116,7 @@ rule-providers:
     url: '{{ replace(replace(input.source, "^clash-(classic|ipcidr):", ""), "'", "''") }}'
     # Omit path: Mihomo keys the cache by URL, so inserting a rule cannot reuse another service's cache.
     interval: 86400
-    proxy: '{{ replace(input.group, "'", "''") }}'
+    proxy: '{{ replace(routing.default_group, "'", "''") }}'
 {% endif %}
 {% endif %}
 {% endfor %}
