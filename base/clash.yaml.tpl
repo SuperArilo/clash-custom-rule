@@ -9,7 +9,7 @@
 {% if startsWith(trim(line), "ruleset=") and exists("routing.default_group") %}
 {{ ERROR_FINAL_or_MATCH_must_be_last_rule }}
 {% endif %}
-{% if startsWith(trim(line), "custom_proxy_group=") and endsWith(trim(line), "`select`[]DIRECT") %}
+{% if startsWith(trim(line), "custom_proxy_group=") and startsWith(replace(trim(line), "^custom_proxy_group=[^`]*`select`", ""), "[]DIRECT") %}
 {{ set("routing.direct_group", replace(trim(line), "^custom_proxy_group=(.*?)`.*$", "$1")) }}
 {% endif %}
 {% if startsWith(trim(line), "ruleset=") and (endsWith(trim(line), ",[]FINAL") or endsWith(trim(line), ",[]MATCH")) %}
@@ -77,6 +77,11 @@ dns:
 {% if input.group == routing.direct_group or input.group == "DIRECT" %}
       - 'https://dns.alidns.com/dns-query'
       - 'https://doh.pub/dns-query'
+      - 'https://doh.360.cn/dns-query'
+      - 180.184.1.1
+      - 180.184.2.2
+      - 114.114.114.114
+      - 1.2.4.8
 {% else %}
       - 'https://1.1.1.1/dns-query#{{ replace(input.group, "'", "''") }}'
 {% endif %}
