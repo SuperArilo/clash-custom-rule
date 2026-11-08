@@ -17,7 +17,7 @@
 {% endif %}
 {% if startsWith(trim(line), "ruleset=") %}
 {{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
-{% if not startsWith(input.source, "clash-classic:https://") and not startsWith(input.source, "clash-ipcidr:https://") and input.source != "[]FINAL" and input.source != "[]MATCH" and not startsWith(input.source, "[]GEOIP,") and not startsWith(input.source, "[]IP-CIDR,") and not startsWith(input.source, "[]IP-CIDR6,") %}
+{% if not startsWith(input.source, "clash-classic:https://") and not startsWith(input.source, "clash-ipcidr:https://") and input.source != "[]FINAL" and input.source != "[]MATCH" and not startsWith(input.source, "[]GEOSITE,") and not startsWith(input.source, "[]GEOIP,") and not startsWith(input.source, "[]IP-CIDR,") and not startsWith(input.source, "[]IP-CIDR6,") %}
 {{ ERROR_unsupported_ruleset_source }}
 {% endif %}
 {% if startsWith(input.source, "clash-") %}
