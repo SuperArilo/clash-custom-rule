@@ -75,13 +75,13 @@ dns:
 {% if startsWith(input.source, "clash-classic:") %}
     'rule-set:{{ at(names, loop.index) }}':
 {% if input.group == routing.direct_group or input.group == "DIRECT" %}
-      - 'https://dns.alidns.com/dns-query'
-      - 'https://doh.pub/dns-query'
-      - 'https://doh.360.cn/dns-query'
-      - 180.184.1.1
-      - 180.184.2.2
-      - 114.114.114.114
-      - 1.2.4.8
+      - 'https://dns.alidns.com/dns-query#{{ replace(routing.direct_group, "'", "''") }}'
+      - 'https://doh.pub/dns-query#{{ replace(routing.direct_group, "'", "''") }}'
+      - 'https://doh.360.cn/dns-query#{{ replace(routing.direct_group, "'", "''") }}'
+      - '180.184.1.1#{{ replace(routing.direct_group, "'", "''") }}'
+      - '180.184.2.2#{{ replace(routing.direct_group, "'", "''") }}'
+      - '114.114.114.114#{{ replace(routing.direct_group, "'", "''") }}'
+      - '1.2.4.8#{{ replace(routing.direct_group, "'", "''") }}'
 {% else %}
       - 'https://1.1.1.1/dns-query#{{ replace(input.group, "'", "''") }}'
 {% endif %}
