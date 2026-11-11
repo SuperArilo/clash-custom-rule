@@ -11,6 +11,10 @@
 {% if startsWith(trim(line), "ruleset=") and (endsWith(trim(line), ",[]FINAL") or endsWith(trim(line), ",[]MATCH")) %}
 {{ set("routing.default_group", replace(trim(line), "^ruleset=([^,]+),.*$", "$1")) }}
 {% endif %}
+{% if startsWith(trim(line), "custom_proxy_group=🚀 手动切换`") %}
+{# DNS egress must never be the user-facing default group: switching that group to a direct option would break every nameserver query. #}
+{{ set("routing.dns_group", "🚀 手动切换") }}
+{% endif %}
 {% if startsWith(trim(line), "ruleset=") %}
 {{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
 {% if not startsWith(input.source, "clash-classic:https://") and not startsWith(input.source, "clash-ipcidr:https://") and input.source != "[]FINAL" and input.source != "[]MATCH" and not startsWith(input.source, "[]GEOSITE,") and not startsWith(input.source, "[]GEOIP,") and not startsWith(input.source, "[]IP-CIDR,") and not startsWith(input.source, "[]IP-CIDR6,") %}
@@ -46,6 +50,10 @@
 {% if not exists("routing.default_group") %}
 {{ ERROR_missing_FINAL_or_MATCH_rule }}
 {% endif %}
+{# Fall back to the default group only when the INI defines no manual-select group. #}
+{% if not exists("routing.dns_group") %}
+{{ set("routing.dns_group", routing.default_group) }}
+{% endif %}
 # Generated from INI ruleset declarations; keep their original order.
 mode: rule
 log-level: info
@@ -70,7 +78,7 @@ dns:
     - 1.2.4.8
   direct-nameserver-follow-policy: false
   nameserver:
-    - 'https://1.1.1.1/dns-query#{{ replace(routing.default_group, "'", "''") }}'
+    - 'https://1.1.1.1/dns-query#{{ replace(routing.dns_group, "'", "''") }}'
   fallback: []
 rule-providers:
 {% for line in input.lines %}
