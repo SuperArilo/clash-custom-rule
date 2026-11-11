@@ -4,13 +4,9 @@
 {{ ERROR_cannot_read_rules_from_config }}
 {% endif %}
 {{ split(input.text, "\n", "input.lines") }}
-{{ set("routing.direct_group", "DIRECT") }}
 {% for line in input.lines %}
 {% if startsWith(trim(line), "ruleset=") and exists("routing.default_group") %}
 {{ ERROR_FINAL_or_MATCH_must_be_last_rule }}
-{% endif %}
-{% if startsWith(trim(line), "custom_proxy_group=") and startsWith(replace(trim(line), "^custom_proxy_group=[^`]*`select`", ""), "[]DIRECT") %}
-{{ set("routing.direct_group", replace(trim(line), "^custom_proxy_group=(.*?)`.*$", "$1")) }}
 {% endif %}
 {% if startsWith(trim(line), "ruleset=") and (endsWith(trim(line), ",[]FINAL") or endsWith(trim(line), ",[]MATCH")) %}
 {{ set("routing.default_group", replace(trim(line), "^ruleset=([^,]+),.*$", "$1")) }}
@@ -64,46 +60,18 @@ dns:
   respect-rules: false
   default-nameserver: [8.8.8.8]
   proxy-server-nameserver: [8.8.8.8]
+  direct-nameserver:
+    - 'https://dns.alidns.com/dns-query'
+    - 'https://doh.pub/dns-query'
+    - 'https://doh.360.cn/dns-query'
+    - 180.184.1.1
+    - 180.184.2.2
+    - 114.114.114.114
+    - 1.2.4.8
+  direct-nameserver-follow-policy: false
   nameserver:
     - 'https://1.1.1.1/dns-query#{{ replace(routing.default_group, "'", "''") }}'
   fallback: []
-  nameserver-policy:
-{% for line in input.lines %}
-{% if startsWith(trim(line), "ruleset=") %}
-{{ set("input.group", replace(trim(line), "^ruleset=([^,]+),.*$", "$1")) }}
-{{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
-{% if startsWith(input.source, "clash-classic:") %}
-    'rule-set:{{ at(names, loop.index) }}':
-{% if input.group == routing.direct_group or input.group == "DIRECT" %}
-      - 'https://dns.alidns.com/dns-query#{{ replace(routing.direct_group, "'", "''") }}'
-      - 'https://doh.pub/dns-query#{{ replace(routing.direct_group, "'", "''") }}'
-      - 'https://doh.360.cn/dns-query#{{ replace(routing.direct_group, "'", "''") }}'
-      - '180.184.1.1#{{ replace(routing.direct_group, "'", "''") }}'
-      - '180.184.2.2#{{ replace(routing.direct_group, "'", "''") }}'
-      - '114.114.114.114#{{ replace(routing.direct_group, "'", "''") }}'
-      - '1.2.4.8#{{ replace(routing.direct_group, "'", "''") }}'
-{% else %}
-      - 'https://1.1.1.1/dns-query#{{ replace(input.group, "'", "''") }}'
-{% endif %}
-{% endif %}
-{% endif %}
-{% endfor %}
-    'geosite:category-games@cn':
-      - 'https://dns.alidns.com/dns-query'
-      - 'https://doh.pub/dns-query'
-      - 'https://doh.360.cn/dns-query'
-      - 180.184.1.1
-      - 180.184.2.2
-      - 114.114.114.114
-      - 1.2.4.8
-    'geosite:cn':
-      - 'https://dns.alidns.com/dns-query'
-      - 'https://doh.pub/dns-query'
-      - 'https://doh.360.cn/dns-query'
-      - 180.184.1.1
-      - 180.184.2.2
-      - 114.114.114.114
-      - 1.2.4.8
 rule-providers:
 {% for line in input.lines %}
 {% if startsWith(trim(line), "ruleset=") %}
