@@ -79,6 +79,23 @@ dns:
   direct-nameserver-follow-policy: false
   nameserver:
     - 'https://1.1.1.1/dns-query#{{ replace(routing.dns_group, "'", "''") }}'
+  nameserver-policy:
+    'geosite:cn':
+      - 'https://dns.alidns.com/dns-query'
+      - 'https://doh.pub/dns-query'
+      - 'https://doh.360.cn/dns-query'
+      - 180.184.1.1
+      - 180.184.2.2
+      - 114.114.114.114
+      - 1.2.4.8
+    'geosite:category-games@cn':
+      - 'https://dns.alidns.com/dns-query'
+      - 'https://doh.pub/dns-query'
+      - 'https://doh.360.cn/dns-query'
+      - 180.184.1.1
+      - 180.184.2.2
+      - 114.114.114.114
+      - 1.2.4.8
   fallback: []
 rule-providers:
 {% for line in input.lines %}
