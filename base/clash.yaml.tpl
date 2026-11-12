@@ -63,39 +63,51 @@ dns:
   ipv6: false
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
-  fake-ip-filter: ['*.lan', '*.local', 'localhost']
+  fake-ip-filter:
+    - '*.lan'
+    - '*.local'
+    - localhost
+    - '*.home.arpa'
+    - geosite:private
+    - geosite:cn
+    - 'stun.*.*'
+    - 'stun.*.*.*'
+    - 'ntp.*.*'
+    - '+.msftconnecttest.com'
+    - '+.msftncsi.com'
+    - arilo.cc
   prefer-h3: false
   respect-rules: false
   default-nameserver: [8.8.8.8]
-  proxy-server-nameserver: [8.8.8.8]
+  proxy-server-nameserver: [119.29.29.29]
   direct-nameserver:
-    - 'https://dns.alidns.com/dns-query'
     - 'https://doh.pub/dns-query'
     - 'https://doh.360.cn/dns-query'
     - 180.184.1.1
     - 180.184.2.2
     - 114.114.114.114
     - 1.2.4.8
+    - 'https://dns.alidns.com/dns-query'
   direct-nameserver-follow-policy: false
   nameserver:
     - 'https://1.1.1.1/dns-query#{{ replace(routing.dns_group, "'", "''") }}'
   nameserver-policy:
     'geosite:cn':
-      - 'https://dns.alidns.com/dns-query'
       - 'https://doh.pub/dns-query'
       - 'https://doh.360.cn/dns-query'
       - 180.184.1.1
       - 180.184.2.2
       - 114.114.114.114
       - 1.2.4.8
+      - 'https://dns.alidns.com/dns-query'
     'geosite:category-games@cn':
-      - 'https://dns.alidns.com/dns-query'
       - 'https://doh.pub/dns-query'
       - 'https://doh.360.cn/dns-query'
       - 180.184.1.1
       - 180.184.2.2
       - 114.114.114.114
       - 1.2.4.8
+      - 'https://dns.alidns.com/dns-query'
   fallback: []
 rule-providers:
 {% for line in input.lines %}
