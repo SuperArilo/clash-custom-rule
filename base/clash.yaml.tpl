@@ -136,7 +136,7 @@ rules:
 {{ set("input.group", replace(trim(line), "^ruleset=([^,]+),.*$", "$1")) }}
 {{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
 {% if startsWith(input.source, "clash-") %}
-  - 'RULE-SET,{{ at(names, loop.index) }},{{ replace(input.group, "'", "''") }}'
+  - 'RULE-SET,{{ at(names, loop.index) }},{{ replace(input.group, "'", "''") }}{% if startsWith(input.source, "clash-ipcidr:") %},no-resolve{% endif %}'
 {% else if input.source == "[]FINAL" or input.source == "[]MATCH" %}
   - 'MATCH,{{ replace(input.group, "'", "''") }}'
 {% else %}
