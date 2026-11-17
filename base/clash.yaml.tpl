@@ -30,10 +30,19 @@
 {{ append("input.key", input.name) }}
 {% if exists(input.key) %}
 {# Only collisions need a disambiguator. Bind it to source and group, not line number. #}
-{{ append("input.name", "__") }}
-{{ append("input.name", UrlEncode(input.source)) }}
-{{ append("input.name", "__") }}
-{{ append("input.name", UrlEncode(replace(trim(line), "^ruleset=([^,]+),.*$", "$1"))) }}
+{# Collided filename: short behavior suffix instead of full encoded URL. #}
+{% if startsWith(input.source, "clash-classic:") %}
+{{ append("input.name", "__classical") }}
+{% endif %}
+{% if startsWith(input.source, "mrs-domain:") %}
+{{ append("input.name", "__domain") }}
+{% endif %}
+{% if startsWith(input.source, "clash-ipcidr:") %}
+{{ append("input.name", "__ipcidr") }}
+{% endif %}
+{% if startsWith(input.source, "mrs-ipcidr:") %}
+{{ append("input.name", "__ipcidr") }}
+{% endif %}
 {{ set("input.key", "registered.p_") }}
 {{ append("input.key", input.name) }}
 {% if exists(input.key) %}
