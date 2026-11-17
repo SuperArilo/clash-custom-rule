@@ -85,7 +85,7 @@ dns:
     - 'ntp.*.*'
     - '+.msftconnecttest.com'
     - '+.msftncsi.com'
-    - arilo.cc
+    - +.arilo.cc
   prefer-h3: false
   respect-rules: false
   default-nameserver: [8.8.8.8]
