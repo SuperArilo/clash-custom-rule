@@ -72,6 +72,7 @@ dns:
   ipv6: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
+  fake-ip-range6: 2001:2::1/48
   fake-ip-filter:
     - '*.lan'
     - '*.local'
