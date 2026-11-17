@@ -69,7 +69,7 @@ log-level: info
 dns:
   enable: true
   listen: 0.0.0.0:7874
-  ipv6: false
+  ipv6: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter:
