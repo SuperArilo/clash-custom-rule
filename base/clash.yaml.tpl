@@ -17,12 +17,12 @@
 {% endif %}
 {% if startsWith(trim(line), "ruleset=") %}
 {{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
-{% if not startsWith(input.source, "clash-classic:https://") and not startsWith(input.source, "clash-ipcidr:https://") and input.source != "[]FINAL" and input.source != "[]MATCH" and not startsWith(input.source, "[]GEOSITE,") and not startsWith(input.source, "[]GEOIP,") and not startsWith(input.source, "[]IP-CIDR,") and not startsWith(input.source, "[]IP-CIDR6,") %}
+{% if not startsWith(input.source, "clash-classic:https://") and not startsWith(input.source, "clash-ipcidr:https://") and not startsWith(input.source, "mrs-domain:https://") and not startsWith(input.source, "mrs-ipcidr:https://") and input.source != "[]FINAL" and input.source != "[]MATCH" and not startsWith(input.source, "[]GEOSITE,") and not startsWith(input.source, "[]GEOIP,") and not startsWith(input.source, "[]IP-CIDR,") and not startsWith(input.source, "[]IP-CIDR6,") %}
 {{ ERROR_unsupported_ruleset_source }}
 {% endif %}
-{% if startsWith(input.source, "clash-") %}
-{# Filename without query/fragment, extension and the optional _No_Resolve suffix. #}
-{{ set("input.name", replace(replace(replace(replace(input.source, "[?#].*$", ""), "^.*/", ""), "(_No_Resolve)?[.](yaml|yml|rules)$", ""), "[^A-Za-z0-9_-]", "_")) }}
+{% if startsWith(input.source, "[") %}{% else %}
+{# Provider URL (clash-*/mrs-*); []-type sources start with "[". #}
+{{ set("input.name", replace(replace(replace(replace(input.source, "[?#].*$", ""), "^.*/", ""), "(_No_Resolve)?[.](yaml|yml|rules|mrs)$", ""), "[^A-Za-z0-9_-]", "_")) }}
 {% if input.name == "" %}
 {{ ERROR_ruleset_URL_needs_filename }}
 {% endif %}
@@ -114,16 +114,27 @@ rule-providers:
 {% if startsWith(trim(line), "ruleset=") %}
 {{ set("input.group", replace(trim(line), "^ruleset=([^,]+),.*$", "$1")) }}
 {{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
-{% if startsWith(input.source, "clash-") %}
+{% if startsWith(input.source, "[") %}{% else %}
   '{{ at(names, loop.index) }}':
     type: http
 {% if startsWith(input.source, "clash-classic:") %}
     behavior: classical
-{% else %}
+{% endif %}
+{% if startsWith(input.source, "mrs-domain:") %}
+    behavior: domain
+{% endif %}
+{% if startsWith(input.source, "clash-ipcidr:") %}
     behavior: ipcidr
 {% endif %}
+{% if startsWith(input.source, "mrs-ipcidr:") %}
+    behavior: ipcidr
+{% endif %}
+{% if startsWith(input.source, "mrs-") %}
+    format: mrs
+{% else %}
     format: yaml
-    url: '{{ replace(replace(input.source, "^clash-(classic|ipcidr):", ""), "'", "''") }}'
+{% endif %}
+    url: '{{ replace(replace(input.source, "^(clash-(classic|ipcidr)|mrs-(domain|ipcidr)):", ""), "'", "''") }}'
     # Omit path: Mihomo keys the cache by URL, so inserting a rule cannot reuse another service's cache.
     interval: 86400
     proxy: '{{ replace(routing.default_group, "'", "''") }}'
@@ -135,8 +146,8 @@ rules:
 {% if startsWith(trim(line), "ruleset=") %}
 {{ set("input.group", replace(trim(line), "^ruleset=([^,]+),.*$", "$1")) }}
 {{ set("input.source", replace(trim(line), "^ruleset=[^,]+,", "")) }}
-{% if startsWith(input.source, "clash-") %}
-  - 'RULE-SET,{{ at(names, loop.index) }},{{ replace(input.group, "'", "''") }}{% if startsWith(input.source, "clash-ipcidr:") %},no-resolve{% endif %}'
+{% if not startsWith(input.source, "[") %}
+  - 'RULE-SET,{{ at(names, loop.index) }},{{ replace(input.group, "'", "''") }}{% if startsWith(input.source, "clash-ipcidr:") %},no-resolve{% endif %}{% if startsWith(input.source, "mrs-ipcidr:") %},no-resolve{% endif %}'
 {% else if input.source == "[]FINAL" or input.source == "[]MATCH" %}
   - 'MATCH,{{ replace(input.group, "'", "''") }}'
 {% else %}
